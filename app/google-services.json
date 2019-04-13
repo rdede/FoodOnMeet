@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1022649522067",
+    "firebase_url": "https://foodonmeet.firebaseio.com",
+    "project_id": "foodonmeet",
+    "storage_bucket": "foodonmeet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022649522067:android:155b1d369f28355a",
+        "android_client_info": {
+          "package_name": "com.example.foodonmeet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022649522067-q4ap45aglik18va7903jlvo58nqq0ood.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.foodonmeet",
+            "certificate_hash": "3c3f7a0d22283037abc725d65f2a826af03e3b85"
+          }
+        },
+        {
+          "client_id": "1022649522067-umlsf25gr0o6sicr3qfot9p9sdpp5d1m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHmUZ6r6oljeU_-bEP60jd0GUAc-OGMXA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022649522067-umlsf25gr0o6sicr3qfot9p9sdpp5d1m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

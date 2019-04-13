@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CreateActivity">
+
+    <include
+        layout="@layout/toolbar_create"
+        android:id="@+id/toolbar_create"/>
+
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/btnImgPick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick an image"
+        android:layout_gravity="center_horizontal"
+        android:onClick="chooseImg"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapSentences|textAutoCorrect"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:hint="Title"
+        android:id="@+id/etTitle"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:hint="Description"
+        android:id="@+id/etDesc"/>
+
+    <EditText
+        android:id="@+id/etDatePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:hint="When ?"
+        android:inputType="date"
+        android:focusable="false"
+        android:onClick="openDatePicker" />
+
+    <EditText
+        android:id="@+id/etNbGuests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:hint="Number of guests"/>
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:text="Send"
+        android:id="@+id/btnSend"
+        android:onClick="sendInfos"
+        android:theme="@style/ThemeOverlay.MyDarkButton"/>
+
+</LinearLayout>
