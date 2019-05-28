@@ -77,7 +77,6 @@ public class ChatActivity extends AppCompatActivity implements ChatsAdapter.OnCh
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.findViewById(R.id.btnAdd).setVisibility(View.GONE);
         TextView tvTitle = toolbar.findViewById(R.id.toolbar_title);
         tvTitle.setText("Chat");
 
@@ -93,7 +92,7 @@ public class ChatActivity extends AppCompatActivity implements ChatsAdapter.OnCh
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                final UserChat currentUser = document.toObject(UserChat.class);
+                                /*final UserChat currentUser = document.toObject(UserChat.class);
 
                                 StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("profilePic")
                                         .child(currentUser.getUid()+"_small");
@@ -111,7 +110,7 @@ public class ChatActivity extends AppCompatActivity implements ChatsAdapter.OnCh
                                         Toast.makeText(ChatActivity.this, "Picture download failed", Toast.LENGTH_SHORT).show();
                                         loadData(currentUser.getName(), null);
                                     }
-                                });
+                                });*/
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -165,10 +164,10 @@ public class ChatActivity extends AppCompatActivity implements ChatsAdapter.OnCh
     }
 
     public void loadData(String name, Bitmap bitmap) {
-        final ArrayList<UserChat> items = new ArrayList<>();
+        /*final ArrayList<UserChat> items = new ArrayList<>();
         items.add(new UserChat(name, bitmap));
 
         mListAdapter = new ChatsAdapter(items, ChatActivity.this);
-        mList.setAdapter(mListAdapter);
+        mList.setAdapter(mListAdapter);*/
     }
 }

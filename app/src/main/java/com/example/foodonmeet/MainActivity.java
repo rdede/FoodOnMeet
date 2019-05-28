@@ -1,5 +1,7 @@
 package com.example.foodonmeet;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,20 +14,22 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
+import com.example.foodonmeet.Create.CreateActivity;
 import com.example.foodonmeet.home.HomeFragment;
-import com.example.foodonmeet.home.PostsAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.foodonmeet.home.EventsAdapter;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements PostsAdapter.OnListItemClickListener {
+public class MainActivity extends AppCompatActivity implements EventsAdapter.OnListItemClickListener {
 
     static final String TAG = MainActivity.class.getName();
 
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements PostsAdapter.OnLi
     final Fragment fragment3 = new NotificationsFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active = fragment1;
+
+    FirebaseAuth mAuth;
 
 
     @Override
@@ -49,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements PostsAdapter.OnLi
 
         imgProfile = findViewById(R.id.imgProfile);
 
+        mAuth = FirebaseAuth.getInstance();
+
         fm.beginTransaction().add(R.id.main_container, fragment3, "3").hide(fragment3).commit();
         fm.beginTransaction().add(R.id.main_container, fragment2, "2").hide(fragment2).commit();
         fm.beginTransaction().add(R.id.main_container,fragment1, "1").commit();
@@ -57,39 +65,20 @@ public class MainActivity extends AppCompatActivity implements PostsAdapter.OnLi
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.findViewById(R.id.btnAdd).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent createIntent = new Intent(getApplicationContext(), CreateActivity.class);
-                startActivity(createIntent);
-            }
-        });
-
         toolbar.findViewById(R.id.imgProfile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent createIntent = new Intent(getApplicationContext(), ChatsAdapter.ProfileActivity.class);
-                startActivity(createIntent);
+                Intent settingsIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                startActivity(settingsIntent);
             }
         });
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("profilePic")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()+"_small");
 
-
-        final long SIZE = 300 * 300;
-        storageRef.getBytes(SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                imgProfile.setImageBitmap(bmp);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(MainActivity.this, "Picture download failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        loadImageFromStorage(directory.getAbsolutePath());
     }
 
     @Override
@@ -101,6 +90,21 @@ public class MainActivity extends AppCompatActivity implements PostsAdapter.OnLi
     public void goToCreate(View view) {
         Intent createIntent = new Intent(getApplicationContext(), CreateActivity.class);
         startActivity(createIntent);
+    }
+
+    private void loadImageFromStorage(String path)
+    {
+
+        try {
+            File f = new File(path, mAuth.getCurrentUser().getUid()+".jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            imgProfile.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

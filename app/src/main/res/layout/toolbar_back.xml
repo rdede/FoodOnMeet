@@ -6,7 +6,9 @@
     android:background="@color/colorPrimary"
     android:elevation="4dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,17 +17,16 @@
 
         <ImageButton
             android:id="@+id/btnClose"
-            android:layout_width="35dp"
-            android:paddingRight="30dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:src="@drawable/ic_arrow_back"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:onClick="backHome"/>
+            style="@style/Widget.AppCompat.Button.Borderless" />
 
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="Post"
             android:gravity="left|center_vertical"

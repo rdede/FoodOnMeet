@@ -8,7 +8,7 @@
     tools:context=".ProfileSetup.ProfileSetupActivity">
 
     <include
-        android:id="@+id/toolbar_profile_setup"
+        android:id="@+id/toolbar"
         layout="@layout/toolbar_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

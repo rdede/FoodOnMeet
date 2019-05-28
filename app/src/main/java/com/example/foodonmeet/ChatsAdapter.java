@@ -26,10 +26,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
 
-    private ArrayList<UserChat> mChats;
+    private ArrayList<User> mChats;
     final private OnChatsItemClickListener mOnChatsItemClickListener;
 
-    ChatsAdapter(ArrayList<UserChat> Chats, OnChatsItemClickListener Listener) {
+    ChatsAdapter(ArrayList<User> Chats, OnChatsItemClickListener Listener) {
         mChats = Chats;
         mOnChatsItemClickListener = Listener;
     }
@@ -44,11 +44,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ChatsAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.profilePic.setImageBitmap(mChats.get(i).getProfilePic());
+        /*viewHolder.profilePic.setImageBitmap(mChats.get(i).getProfilePic());
         if(mChats.get(i).getProfilePic() == null) {
             Log.d("test", "onBindViewHolder: null");
         }
-        viewHolder.username.setText(mChats.get(i).getName());
+        viewHolder.username.setText(mChats.get(i).getName());*/
     }
 
     @Override
@@ -89,11 +89,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         private final Integer PICK_IMAGE_REQUEST=1;
         private static final String TAG = ProfileActivity.class.getName();
 
-        final Fragment fragment1 = new HomeFragment();
+        //final Fragment fragment1 = new HomeFragment();
         final Fragment fragment2 = new ChatFragment();
         final Fragment fragment3 = new NotificationsFragment();
         final FragmentManager fm = getSupportFragmentManager();
-        Fragment active = fragment1;
+        //Fragment active = fragment1;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {

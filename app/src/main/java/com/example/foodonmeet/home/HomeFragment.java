@@ -10,9 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.foodonmeet.DetailsActivity;
-import com.example.foodonmeet.MainActivity;
 import com.example.foodonmeet.R;
 import com.example.foodonmeet.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,16 +24,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 
-public class HomeFragment extends Fragment implements PostsAdapter.OnListItemClickListener {
+public class HomeFragment extends Fragment implements EventsAdapter.OnListItemClickListener {
 
     private final static String TAG = HomeFragment.class.getName();
 
-    private ArrayList<Post> rv_list;
+    private ArrayList<Event> rv_list;
     private RecyclerView recyclerView;
+
+    private ProgressBar pbLoading;
 
     FirebaseFirestore db;
 
@@ -51,13 +52,14 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnListItemCli
 
         db = FirebaseFirestore.getInstance();
 
+        pbLoading = view.findViewById(R.id.pbLoading);
 
-        rv_list = new ArrayList<Post>();
+        rv_list = new ArrayList<Event>();
 
-        Date c = Calendar.getInstance().getTime();
-        User user = new User("username");
+        /*Date c = Calendar.getInstance().getTime();
+        User user = new User("username");*/
 
-        String idPost = UUID.randomUUID().toString();
+        pbLoading.setVisibility(ProgressBar.VISIBLE);
 
         db.collection("posts")
                 .get()
@@ -66,12 +68,15 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnListItemCli
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                rv_list.add(document.toObject(Post.class));
-                                Log.d("coucou", rv_list.get(0).getPostId());
-                                PostsAdapter mAdapter = new PostsAdapter(rv_list, HomeFragment.this);
-                                recyclerView.setAdapter(mAdapter);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                Event event = document.toObject(Event.class);
+                                if(event.getDate().after(Calendar.getInstance().getTime())) {
+                                    rv_list.add(event);
+                                    EventsAdapter mAdapter = new EventsAdapter(rv_list, HomeFragment.this, getContext());
+                                    recyclerView.setAdapter(mAdapter);
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                }
                             }
+                            pbLoading.setVisibility(ProgressBar.GONE);
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
@@ -83,7 +88,7 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnListItemCli
     @Override
     public void onListItemClick(int clickedItemIndex) {
         Intent i = new Intent(getActivity(), DetailsActivity.class);
-        i.putExtra("index", clickedItemIndex);
+        i.putExtra("postId", rv_list.get(clickedItemIndex).getPostId());
         startActivity(i);
     }
 }

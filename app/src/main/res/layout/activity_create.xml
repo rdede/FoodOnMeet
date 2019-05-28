@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".CreateActivity">
+    tools:context=".Create.CreateActivity">
 
     <include
-        layout="@layout/toolbar_create"
-        android:id="@+id/toolbar_create"/>
+        layout="@layout/toolbar_back"
+        android:id="@+id/toolbar"/>
 
-    <ImageView
+    <include
+        layout="@layout/content_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentBottom="true"/>
+
+    <!--<ImageView
         android:id="@+id/imgView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,6 +78,6 @@
         android:text="Send"
         android:id="@+id/btnSend"
         android:onClick="sendInfos"
-        android:theme="@style/ThemeOverlay.MyDarkButton"/>
+        android:theme="@style/ThemeOverlay.MyDarkButton"/>-->
 
-</LinearLayout>
+</RelativeLayout>
