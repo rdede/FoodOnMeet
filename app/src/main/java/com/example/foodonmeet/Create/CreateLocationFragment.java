@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import com.example.foodonmeet.R;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+
 
 import java.util.Arrays;
 
@@ -24,7 +26,7 @@ public class CreateLocationFragment extends Fragment {
 
     private static final String TAG = CreateLocationFragment.class.getName();
 
-    private String address;
+    private LatLng latLng;
 
     public CreateLocationFragment() { }
 
@@ -44,20 +46,18 @@ public class CreateLocationFragment extends Fragment {
                 getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
         // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                address = place.getAddress();
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                latLng = place.getLatLng();
+                Log.d("coucou", "Place: " + place.getName() + ", " + place.getId());
             }
 
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
                 Log.i(TAG, "An error occurred: " + status);
             }
         });
@@ -65,7 +65,7 @@ public class CreateLocationFragment extends Fragment {
         return view;
     }
 
-    public String getAddress() {
-        return address;
+    public LatLng getLatLng() {
+        return latLng;
     }
 }

@@ -12,13 +12,15 @@ public class User {
     private String name;
     private Date birthdate;
     private String nationality;
+    private String bio;
 
 
-    public User(String UID, String name, Date birthdate, String nationality) {
+    public User(String UID, String name, Date birthdate, String nationality, String bio) {
         this.UID = UID;
         this.name = name;
         this.birthdate = birthdate;
         this.nationality = nationality;
+        this.bio = bio;
     }
 
     public User() {
@@ -54,6 +56,14 @@ public class User {
 
     public void setUID(String UID) {
         this.UID = UID;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public String accessAge(){

@@ -4,8 +4,10 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.foodonmeet.User;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Event {
@@ -16,8 +18,11 @@ public class Event {
     private int nbGuests;
     private int nbGuestsMax;
     private String postId;
+    private ArrayList<String> listGuests;
+    private double latitude;
+    private double longitude;
 
-    public Event(String title, User user, Date date, String desc, int nbGuests, int nbGuestsMax, String postId) {
+    public Event(String title, User user, Date date, String desc, int nbGuests, int nbGuestsMax, String postId, ArrayList<String> listGuests, double latitude, double longitude) {
         this.title = title;
         this.user = user;
         this.date = date;
@@ -25,6 +30,9 @@ public class Event {
         this.nbGuests = nbGuests;
         this.nbGuestsMax = nbGuestsMax;
         this.postId = postId;
+        this.listGuests = listGuests;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Event() {
@@ -94,5 +102,29 @@ public class Event {
     public String getTimeString() {
         SimpleDateFormat fmtOut = new SimpleDateFormat("HH:mm");
         return fmtOut.format(date);
+    }
+
+    public ArrayList<String> getListGuests() {
+        return listGuests;
+    }
+
+    public void setListGuests(ArrayList<String> listGuests) {
+        this.listGuests = listGuests;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

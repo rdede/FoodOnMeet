@@ -51,5 +51,9 @@
     <string name="create_title">Give a title to your event...</string>
     <string name="create_desc">...And a description</string>
     <string name="create_title_hint">Pizza party!</string>
-    <string name="create_desc_hint">Hello! I\'m hosting a pizza party tonight at my place, please bring some chairs 😊 \n\n\n</string>
+    <string name="create_desc_hint">Hello! I\'m hosting a pizza party tonight at my place, please bring some chairs 😊</string>
+
+    <string name="profile_bio">Bio</string>
+
+    <string name="save">Save</string>
 </resources>

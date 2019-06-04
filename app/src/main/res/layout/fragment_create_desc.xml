@@ -27,6 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
+            android:gravity="top|left"
+            android:minLines="6"
             android:background="@drawable/shape_create_desc"
             android:hint="@string/create_desc_hint"
             android:textColor="#000000"

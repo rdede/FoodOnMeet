@@ -15,33 +15,32 @@
 
         <ImageButton
             android:id="@+id/btnClose"
-            android:layout_width="35dp"
-            android:paddingRight="30dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_close_white"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:onClick="cancelCreate"/>
+            android:src="@drawable/ic_arrow_back"
+            style="@style/Widget.AppCompat.Button.Borderless" />
 
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:text="New post"
+            android:text="Post"
             android:gravity="left|center_vertical"
             android:textColor="@android:color/white"
             android:textSize="20dp"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btnSendImg"
+            android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send"
+            android:text="@string/save"
+            android:textColor="@color/white"
             android:gravity="center"
             android:textSize="20sp"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:onClick="sendInfos" />
+            style="@style/Widget.AppCompat.Button.Borderless" />
 
 
     </LinearLayout>

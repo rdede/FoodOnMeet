@@ -26,8 +26,7 @@
             android:layout_height="170dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
-            android:src="@drawable/ic_person_highpx"
-            android:onClick="chooseImg"/>
+            android:src="@drawable/ic_person_highpx" />
 
     </RelativeLayout>
 
@@ -94,11 +93,4 @@
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_out"
-        android:layout_alignParentBottom="true"
-        android:onClick="signOut"/>
 </RelativeLayout>

@@ -14,14 +14,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.foodonmeet.Notifications.Booking;
 import com.example.foodonmeet.home.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -35,6 +39,10 @@ public class DetailsActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private String postId;
+    private String postUid;
+    private String postName;
+    private String userName;
+    private int flag;
 
     private TextView tvDate;
     private CircleImageView imgProfile;
@@ -70,12 +78,11 @@ public class DetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         postId = intent.getStringExtra("postId");
+        postName = intent.getStringExtra("postName");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        rlDetails.setVisibility(RelativeLayout.GONE);
-        pbLoading.setVisibility(ProgressBar.VISIBLE);
         getPostData();
 
         toolbar.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
@@ -87,6 +94,8 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void getPostData() {
+        rlDetails.setVisibility(RelativeLayout.GONE);
+        pbLoading.setVisibility(ProgressBar.VISIBLE);
         db.collection("posts").document(postId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -97,15 +106,14 @@ public class DetailsActivity extends AppCompatActivity {
                             if (document.exists()) {
                                 Event event = document.toObject(Event.class);
                                 tvDate.setText(event.getDateString());
-                                if(event.getDesc().isEmpty()) {
+                                if (event.getDesc().isEmpty()) {
                                     tvDesc.setText(getResources().getText(R.string.no_desc));
                                     tvDesc.setTypeface(tvDesc.getTypeface(), Typeface.ITALIC);
-                                }
-                                else {
+                                } else {
                                     tvDesc.setText(event.getDesc());
                                 }
                                 StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("profilePic")
-                                        .child(event.getUser().getUID()+"_small");
+                                        .child(event.getUser().getUID() + "_small");
                                 final long SIZE = 300 * 300;
                                 storageRef.getBytes(SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                     @Override
@@ -120,6 +128,9 @@ public class DetailsActivity extends AppCompatActivity {
                                 tvHostNameAge.setText(event.getUser().getName() + ", " + event.getUser().accessAge());
                                 tvTime.setText(event.getTimeString());
                                 imgHostFlag.setImageDrawable(getResources().getDrawable(event.getUser().accessFlag()));
+                                postUid = event.getUser().getUID();
+                                userName = event.getUser().getName();
+                                flag = event.getUser().accessFlag();
                                 pbLoading.setVisibility(ProgressBar.GONE);
                                 rlDetails.setVisibility(RelativeLayout.VISIBLE);
                             } else {
@@ -127,6 +138,40 @@ public class DetailsActivity extends AppCompatActivity {
                             }
                         } else {
                             Log.d("coucou", "get failed with ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void viewProfile(View view) {
+        Intent i = new Intent(this, ProfileDetailsActivity.class);
+        i.putExtra("uid", postUid);
+        startActivity(i);
+    }
+
+    public void startBooking(View view) {
+        db.collection("bookings").whereEqualTo("requesterUid", mAuth.getUid()).whereEqualTo("postId", postId)
+                .limit(1).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (!task.getResult().isEmpty()) {
+                                Toast.makeText(DetailsActivity.this, "You have already sent a booking request for this event", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Booking booking = new Booking(userName, flag, mAuth.getUid(), postName, postId, postUid, null);
+                                db.collection("bookings")
+                                        .add(booking)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                db.collection("booking").document(documentReference.getId())
+                                                        .update("bookingId", documentReference.getId());
+                                                Toast.makeText(DetailsActivity.this, "A booking request has been send", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                finish();
+                            }
                         }
                     }
                 });

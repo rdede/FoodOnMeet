@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.foodonmeet.Notifications.NotificationsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -84,8 +84,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         Uri uri;
         DatePicker datePicker;
 
-        private FirebaseAuth mAuth;
-
         private final Integer PICK_IMAGE_REQUEST=1;
         private static final String TAG = ProfileActivity.class.getName();
 
@@ -112,7 +110,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(this);*/
 
-            mAuth = FirebaseAuth.getInstance();
         }
 
         public void onItemSelected(AdapterView<?> parent, View view,
@@ -146,10 +143,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
                 i.putExtra("origin", "Profile");
                 startActivity(i);
             }
-        }
-
-        public void signOut(View view) {
-            mAuth.signOut();
         }
     }
 }

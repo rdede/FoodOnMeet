@@ -57,10 +57,6 @@ public class ProfileActivity extends AppCompatActivity {
         loadImageFromStorage(directory.getAbsolutePath());
     }
 
-    public void signOut(View view) {
-        mAuth.signOut();
-    }
-
     private void loadImageFromStorage(String path)
     {
 

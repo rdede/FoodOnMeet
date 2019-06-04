@@ -35,6 +35,7 @@ import com.example.foodonmeet.ProfileSetup.ProfileSetupPasswordFragment;
 import com.example.foodonmeet.R;
 import com.example.foodonmeet.User;
 import com.example.foodonmeet.home.Event;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -154,10 +155,15 @@ public class CreateActivity extends AppCompatActivity {
                 break;
 
 
-            case "location": /*CreateLocationFragment fragment2 = (CreateLocationFragment)fm.findFragmentByTag("location");
-                Geocoder geocoder = new Geocoder(this);
+            case "location": CreateLocationFragment fragment2 = (CreateLocationFragment)fm.findFragmentByTag("location");
+                LatLng latLng = fragment2.getLatLng();
+                latitude = latLng.latitude;
+                longitude = latLng.longitude;
+                Log.d("coucou", "lat : " + latitude + ", lng : " + longitude);
+                /*Geocoder geocoder = new Geocoder(this);
                 List<Address> addresses = new ArrayList<>();
                 try {
+                    Log.d("coucou", "address" + fragment2.getAddress());
                     addresses = geocoder.getFromLocationName(fragment2.getAddress(), 1);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -201,7 +207,7 @@ public class CreateActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot document = task.getResult();
                         User user = document.toObject(User.class);
-                        Event post = new Event(title, user, date, desc, 0, nbGuests, null);
+                        Event post = new Event(title, user, date, desc, 0, nbGuests, null, new ArrayList<String>(), latitude, longitude);
                         db.collection("posts")
                                 .add(post)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -230,7 +236,6 @@ public class CreateActivity extends AppCompatActivity {
 
     public void setDate(Date dateFragment) {
         date = dateFragment;
-        Log.d("coucou", date.toString());
         fm.beginTransaction().hide(fragmentDate).show(fragmentTime).commit();
         active = fragmentTime;
     }

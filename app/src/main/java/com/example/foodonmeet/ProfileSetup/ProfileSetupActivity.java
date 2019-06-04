@@ -158,12 +158,13 @@ public class ProfileSetupActivity extends AppCompatActivity {
         ProfileSetupPasswordFragment fragment = (ProfileSetupPasswordFragment)fm.findFragmentByTag("password");
         password = fragment.getPassword();
         fragment.setPbVisible();
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            User user = new User(mAuth.getUid(), name, birthdate, nationality);
+                            User user = new User(mAuth.getUid(), name, birthdate, nationality, null);
                             db.collection("users").document(mAuth.getCurrentUser().getUid())
                                     .set(user)
                                     .addOnFailureListener(new OnFailureListener() {

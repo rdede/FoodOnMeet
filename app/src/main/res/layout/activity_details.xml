@@ -46,7 +46,7 @@
                 android:layout_height="40dp"
                 android:layout_below="@+id/tvDate"
                 android:layout_margin="20dp"
-                android:src="@drawable/ic_login" />
+                android:src="@drawable/ic_person_highpx" />
 
             <TextView
                 android:id="@+id/tvDesc"
@@ -168,7 +168,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_margin="10dp"
-                    android:src="@drawable/ic_login" />
+                    android:src="@drawable/ic_person_highpx" />
 
                 <TextView
                     android:id="@+id/eventHostNameAge"
@@ -188,8 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_person_black" />
+                    android:layout_marginRight="16dp" />
 
             </RelativeLayout>
 
@@ -206,7 +205,8 @@
                 android:layout_below="@+id/rlHost"
                 android:background="@android:color/transparent"
                 android:text="@string/see_profile"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:onClick="viewProfile"/>
 
             <View
                 android:id="@+id/viewButtonBottom"
@@ -244,7 +244,8 @@
         android:background="@color/colorPrimary"
         android:text="@string/booking"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:onClick="startBooking"/>
 
     <LinearLayout
         android:layout_width="match_parent"

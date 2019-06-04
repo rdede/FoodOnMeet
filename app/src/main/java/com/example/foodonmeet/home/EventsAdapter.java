@@ -1,9 +1,14 @@
 package com.example.foodonmeet.home;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,8 +36,11 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
@@ -60,7 +68,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull final EventsAdapter.ViewHolder viewHolder, final int i) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("profilePic")
-            .child(mList.get(i).getUser().getUID()+"_small");
+                .child(mList.get(i).getUser().getUID() + "_small");
         final long SIZE = 300 * 300;
         storageRef.getBytes(SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -75,6 +83,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         viewHolder.nbGuests.setRating(mList.get(i).getNbGuests());
         viewHolder.hostNameAge.setText(mList.get(i).getUser().getName() + ", " + mList.get(i).getUser().accessAge());
         viewHolder.hostFlag.setImageDrawable(context.getResources().getDrawable(mList.get(i).getUser().accessFlag()));
+        viewHolder.tvDistance.setText(getDistance(mList.get(i).getLatitude(), mList.get(i).getLongitude()));
     }
 
     @Override
@@ -82,7 +91,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return mList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         CircleImageView hostPicture;
         TextView hostNameAge;
@@ -90,6 +99,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         TextView title;
         TextView date;
         RatingBar nbGuests;
+        TextView tvDistance;
 
 
         ViewHolder(View itemView) {
@@ -100,6 +110,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             title = itemView.findViewById(R.id.eventTitle);
             date = itemView.findViewById(R.id.eventDate);
             nbGuests = itemView.findViewById(R.id.eventGuestNb);
+            tvDistance = itemView.findViewById(R.id.tvDistance);
 
             itemView.setOnClickListener(this);
         }
@@ -110,7 +121,41 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         }
 
     }
+
     public interface OnListItemClickListener {
         void onListItemClick(int clickedItemIndex);
+    }
+
+    public String getDistance(double latitude, double longitude) {
+        Location eventLocation = new Location("point A");
+
+        eventLocation.setLatitude(latitude);
+        eventLocation.setLongitude(longitude);
+
+        Location myLocation = getLastKnownLocation();
+
+        float distanceFloat = myLocation.distanceTo(eventLocation)/1000;
+
+        return String.format("%.1f%n", distanceFloat) + "km";
+    }
+
+    private Location getLastKnownLocation() {
+        LocationManager mLocationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            }
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
     }
 }
