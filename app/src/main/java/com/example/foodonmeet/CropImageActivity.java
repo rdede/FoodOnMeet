@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.foodonmeet.Create.CreateActivity;
@@ -31,6 +32,7 @@ import java.io.IOException;
 public class CropImageActivity extends AppCompatActivity {
 
     ImageCropView imageCropView;
+    ProgressBar pbLoading;
 
     String originActivity;
 
@@ -49,6 +51,7 @@ public class CropImageActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         imageCropView = findViewById(R.id.imageCropView);
+        pbLoading = findViewById(R.id.pbLoading);
 
         imageCropView.setGridInnerMode(ImageCropView.GRID_ON);
         imageCropView.setGridOuterMode(ImageCropView.GRID_ON);
@@ -78,6 +81,7 @@ public class CropImageActivity extends AppCompatActivity {
     }
 
     public void sendImg(View view) {
+        pbLoading.setVisibility(ProgressBar.VISIBLE);
         if (originActivity.equals("Profile")) {
             bitmap = imageCropView.getCroppedImage();
 

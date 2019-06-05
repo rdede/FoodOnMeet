@@ -44,7 +44,8 @@
             android:textSize="18sp"
             android:paddingLeft="30dp"
             android:textColor="@android:color/holo_red_light"
-            android:background="@drawable/shape_button_settings"/>
+            android:background="@drawable/shape_button_settings"
+            android:onClick="signOut"/>
 
     </RelativeLayout>
 
