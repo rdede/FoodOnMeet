@@ -56,4 +56,6 @@
     <string name="profile_bio">Bio</string>
 
     <string name="save">Save</string>
+    <string name="error_empty_message">Please enter a message</string>
+    <string name="error_message_failed">Faileed to send your message</string>
 </resources>

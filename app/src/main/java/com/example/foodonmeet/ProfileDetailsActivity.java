@@ -15,10 +15,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.foodonmeet.Chat.ChatRoomRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -124,11 +129,59 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                         }
                     }
                 });
+        btnContact = findViewById(R.id.btnSendMessage);
+        btnContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage(v);
+            }
+        });
     }
 
     public void sendMessage(View view) {
-        Intent i = new Intent(this, ChatActivity.class);
+        /*Intent i = new Intent(this, ChatActivity.class);
         i.putExtra("profileUid", profileId);
-        startActivity(i);
+        startActivity(i);*/
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (profileId.length() > uid.length()){
+            String roomName = profileId.concat(uid);
+            String uid1 = profileId;
+            String uid2 = uid;
+            createRoom(roomName, uid1, uid2);
+        } else {
+            String roomName = uid.concat(profileId);
+            String uid1 = uid;
+            String uid2 = profileId;
+            createRoom(roomName, uid1, uid2);
+        }
+    }
+
+    private void createRoom(String roomName, String uid1, String uid2) {
+        ChatRoomRepository chatRoomRepository = new ChatRoomRepository(db);
+        chatRoomRepository.createRoom(
+                roomName,
+                uid1,
+                uid2,
+                new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Intent intent = new Intent(ProfileDetailsActivity.this, ChatRoomActivity.class);
+                        intent.putExtra(ChatRoomActivity.CHAT_ROOM_ID, documentReference.getId());
+                        intent.putExtra(ChatRoomActivity.USERNAME, tvName.getText().toString());
+                        startActivity(intent);
+                        finish();
+                    }
+                },
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(
+                                ProfileDetailsActivity.this,
+                                "Error creating chat room",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                }
+        );
     }
 }
