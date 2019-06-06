@@ -12,6 +12,7 @@
         android:layout_gravity="end"
         android:background="@drawable/chat_sent_rounded_background"
         android:padding="8dp"
+        android:textSize="18sp"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

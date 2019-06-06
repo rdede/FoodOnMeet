@@ -12,26 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.example.foodonmeet.Chat.ChatRoom;
-import com.example.foodonmeet.Chat.ChatRoomRepository;
-import com.example.foodonmeet.Chat.ChatRoomsAdapter;
-import com.example.foodonmeet.ChatRoomActivity;
 import com.example.foodonmeet.R;
 import com.example.foodonmeet.User;
-import com.example.foodonmeet.home.EventsAdapter;
-import com.example.foodonmeet.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ChatFragment extends Fragment implements ChatRoomsAdapter.OnListItemClickListener{
 

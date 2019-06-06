@@ -1,4 +1,4 @@
-package com.example.foodonmeet;
+package com.example.foodonmeet.Chat;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.foodonmeet.Chat.Chat;
 import com.example.foodonmeet.Chat.ChatRoomRepository;
 import com.example.foodonmeet.Chat.ChatsAdapter;
+import com.example.foodonmeet.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,6 +67,13 @@ public class ChatRoomActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText(roomName);
+
+        toolbar.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 

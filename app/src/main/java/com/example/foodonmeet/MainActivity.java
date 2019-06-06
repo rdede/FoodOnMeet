@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.foodonmeet.Chat.ChatFragment;
+import com.example.foodonmeet.Chat.ChatsAdapter;
 import com.example.foodonmeet.Create.CreateActivity;
 import com.example.foodonmeet.Notifications.NotificationsFragment;
 import com.example.foodonmeet.home.HomeFragment;
@@ -32,7 +33,7 @@ import java.io.FileNotFoundException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements EventsAdapter.OnListItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     static final String TAG = MainActivity.class.getName();
 
@@ -86,12 +87,6 @@ public class MainActivity extends AppCompatActivity implements EventsAdapter.OnL
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         loadImageFromStorage(directory.getAbsolutePath());
-    }
-
-    @Override
-    public void onListItemClick(int clickedItemIndex) {
-        Intent i = new Intent(getApplicationContext(), ChatsAdapter.ProfileActivity.class);
-        startActivity(i);
     }
 
     @Override

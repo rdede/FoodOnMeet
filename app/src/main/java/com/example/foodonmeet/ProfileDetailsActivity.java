@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.foodonmeet.Chat.ChatRoom;
+import com.example.foodonmeet.Chat.ChatRoomActivity;
 import com.example.foodonmeet.Chat.ChatRoomRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

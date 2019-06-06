@@ -29,7 +29,6 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ProfileSetup.ProfileSetupActivity" />
-        <activity android:name=".ChatDetailActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -43,10 +42,8 @@
             android:value="@string/API_PLACES_KEY" />
 
         <activity android:name=".NotificationsActivity" />
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".ChatRoomActivity" />
+        <activity android:name=".Chat.ChatRoomActivity" />
         <activity android:name=".CropImageActivity" />
-        <activity android:name=".ChatsAdapter$ProfileActivity" />
         <activity android:name=".DetailsActivity" />
         <activity android:name=".Create.CreateActivity" />
         <activity android:name=".MainActivity" />

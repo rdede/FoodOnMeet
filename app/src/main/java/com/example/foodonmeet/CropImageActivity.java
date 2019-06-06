@@ -69,129 +69,68 @@ public class CropImageActivity extends AppCompatActivity {
     }
 
     public void cancelCrop(View view) {
-        if(originActivity.equals("Profile")) {
-            Toast.makeText(this, "Upload canceled.", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(getApplicationContext(), ChatsAdapter.ProfileActivity.class);
-            startActivity(i);
-        } else if(originActivity.equals("Create")) {
-            Toast.makeText(this, "Upload canceled.", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(getApplicationContext(), CreateActivity.class);
-            startActivity(i);
-        }
+        Toast.makeText(this, "Upload canceled.", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     public void sendImg(View view) {
         pbLoading.setVisibility(ProgressBar.VISIBLE);
-        if (originActivity.equals("Profile")) {
-            bitmap = imageCropView.getCroppedImage();
+        bitmap = imageCropView.getCroppedImage();
 
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            byte[] dataLarge = bytes.toByteArray();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        byte[] dataLarge = bytes.toByteArray();
 
-            StorageReference ref = FirebaseStorage.getInstance().getReference().child("profilePic")
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        StorageReference ref = FirebaseStorage.getInstance().getReference().child("profilePic")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-            UploadTask uploadTaskLarge = ref.putBytes(dataLarge);
-            uploadTaskLarge.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(CropImageActivity.this, "Upload failed.", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    uploadSmall();
-                }
-            });
-            saveToInternalStorage(bitmap);
-        } else if(originActivity.equals("Create")) {
-            bitmap = imageCropView.getCroppedImage();
-
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            byte[] dataLarge = bytes.toByteArray();
-
-            StorageReference ref = FirebaseStorage.getInstance().getReference().child("PostPicture")
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-            UploadTask uploadTaskLarge = ref.putBytes(dataLarge);
-            uploadTaskLarge.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(CropImageActivity.this, "Upload failed.", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    uploadSmall();
-                }
-            });
-        }
-
-
+        UploadTask uploadTaskLarge = ref.putBytes(dataLarge);
+        uploadTaskLarge.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(CropImageActivity.this, "Upload failed.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                uploadSmall();
+            }
+        });
+        saveToInternalStorage(bitmap);
     }
 
     public void uploadSmall() {
-        if (originActivity.equals("Profile")) {
-            StorageReference ref = FirebaseStorage.getInstance().getReference().child("profilePic")
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid() + "_small");
+        StorageReference ref = FirebaseStorage.getInstance().getReference().child("profilePic")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid() + "_small");
 
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            Bitmap small = bitmap.createScaledBitmap(bitmap, 300, 300, false);
-            small.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            byte[] dataSmall = bytes.toByteArray();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        Bitmap small = bitmap.createScaledBitmap(bitmap, 300, 300, false);
+        small.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        byte[] dataSmall = bytes.toByteArray();
 
-            UploadTask uploadTaskSmall = ref.putBytes(dataSmall);
-            uploadTaskSmall.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(CropImageActivity.this, "Upload failed.", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(CropImageActivity.this, "Profile picture successfully uploaded.", Toast.LENGTH_SHORT).show();
+        UploadTask uploadTaskSmall = ref.putBytes(dataSmall);
+        uploadTaskSmall.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(CropImageActivity.this, "Upload failed.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(CropImageActivity.this, "Profile picture successfully uploaded.", Toast.LENGTH_SHORT).show();
 
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(i);
-                }
-            });
-            saveToInternalStorage(small);
-        } else if(originActivity.equals("Create")) {
-            StorageReference ref = FirebaseStorage.getInstance().getReference().child("PostPicture")
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid() + "_small");
-            final Intent i = new Intent(getApplicationContext(), CreateActivity.class);
-
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            Bitmap small = bitmap.createScaledBitmap(bitmap, 300, 300, false);
-            small.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            byte[] dataSmall = bytes.toByteArray();
-
-            i.putExtra("img", dataSmall);
-
-            UploadTask uploadTaskSmall = ref.putBytes(dataSmall);
-            uploadTaskSmall.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(CropImageActivity.this, "Upload failed.", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(CropImageActivity.this, "Profile picture successfully uploaded.", Toast.LENGTH_SHORT).show();
-                    i.putExtra("origin", "Crop");
-                    startActivity(i);
-                }
-            });
-        }
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+            }
+        });
+        saveToInternalStorage(small);
     }
 
-    private String saveToInternalStorage(Bitmap bitmapImage){
+    private String saveToInternalStorage(Bitmap bitmapImage) {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
 
-        File mypath=new File(directory,mAuth.getCurrentUser().getUid()+".jpg");
+        File mypath = new File(directory, mAuth.getCurrentUser().getUid() + ".jpg");
 
         FileOutputStream fos = null;
         try {
