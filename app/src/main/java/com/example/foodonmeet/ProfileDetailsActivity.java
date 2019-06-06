@@ -143,13 +143,14 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         i.putExtra("profileUid", profileId);
         startActivity(i);*/
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String cun = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         if (profileId.length() > uid.length()){
-            String roomName = profileId.concat(uid);
+            String roomName = cun.concat(tvName.getText().toString());
             String uid1 = profileId;
             String uid2 = uid;
             createRoom(roomName, uid1, uid2);
         } else {
-            String roomName = uid.concat(profileId);
+            String roomName = cun.concat(tvName.getText().toString());
             String uid1 = uid;
             String uid2 = profileId;
             createRoom(roomName, uid1, uid2);
