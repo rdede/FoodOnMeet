@@ -12,6 +12,9 @@ public class ChatRoom {
         this.name = name;
     }
 
+    public ChatRoom() {
+    }
+
     public ChatRoom(String uid1) {
         this.uid1 = uid1;
     }

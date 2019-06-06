@@ -14,11 +14,18 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 
     private List<ChatRoom> chatRooms;
 
-    public ChatRoomsAdapter(List<ChatRoom> chatRooms) {
-        this.chatRooms = chatRooms;
+    public interface OnChatRoomClickListener {
+        void onClick(ChatRoom chatRoom);
     }
 
-    @Override
+    public ChatRoomsAdapter(List<ChatRoom> chatRooms, OnChatRoomClickListener listener) {
+        this.chatRooms = chatRooms;
+        this.listener = listener;
+    }
+
+    private OnChatRoomClickListener listener;
+
+        @Override
     public ChatRoomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.item_chat_room,
@@ -45,6 +52,12 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
         public ChatRoomViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.item_chat_room_name);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClick(chatRoom);
+                }
+            });
         }
 
         public void bind(ChatRoom chatRoom) {
