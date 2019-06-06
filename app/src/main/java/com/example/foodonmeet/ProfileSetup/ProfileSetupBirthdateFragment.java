@@ -27,6 +27,7 @@ public class ProfileSetupBirthdateFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_setup_birthdate, container, false);
 
         dpBirthdate = view.findViewById(R.id.dpBirthdate);
+        dpBirthdate.setMaxDate(System.currentTimeMillis());
 
         return view;
     }

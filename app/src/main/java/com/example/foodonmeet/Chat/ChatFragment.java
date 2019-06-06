@@ -1,4 +1,4 @@
-package com.example.foodonmeet;
+package com.example.foodonmeet.Chat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,10 +15,15 @@ import android.widget.ProgressBar;
 import com.example.foodonmeet.Chat.ChatRoom;
 import com.example.foodonmeet.Chat.ChatRoomRepository;
 import com.example.foodonmeet.Chat.ChatRoomsAdapter;
+import com.example.foodonmeet.ChatRoomActivity;
+import com.example.foodonmeet.R;
+import com.example.foodonmeet.User;
 import com.example.foodonmeet.home.EventsAdapter;
 import com.example.foodonmeet.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -28,10 +33,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.foodonmeet.ChatActivity.TAG;
+public class ChatFragment extends Fragment implements ChatRoomsAdapter.OnListItemClickListener{
 
-
-public class ChatFragment extends Fragment {
+    private static final String TAG = ChatFragment.class.getName();
 
     ChatRoomRepository chatRoomRepository;
     private RecyclerView chatRooms;
@@ -39,7 +43,10 @@ public class ChatFragment extends Fragment {
     private ProgressBar pbLoading;
     private ArrayList<ChatRoom> rv_list;
 
+    private String uid2;
+
     FirebaseFirestore db;
+    FirebaseAuth mAuth;
 
     public ChatFragment() {
 
@@ -53,6 +60,7 @@ public class ChatFragment extends Fragment {
         chatRoomRepository = new ChatRoomRepository(FirebaseFirestore.getInstance());
 
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         chatRooms = (RecyclerView) view.findViewById(R.id.rvChats);
         /*chatRooms.setLayoutManager(new LinearLayoutManager(getActivity()));*/
@@ -63,19 +71,36 @@ public class ChatFragment extends Fragment {
 
         //getChatRooms();
 
-        db.collection("rooms")
+
+        db.collection("rooms").whereArrayContains("uids", mAuth.getUid())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                ChatRoom chatRoom = document.toObject(ChatRoom.class);
-                                    rv_list.add(chatRoom);
-                                    ChatRoomsAdapter mAdapter = new ChatRoomsAdapter(rv_list,listener);
-                                    chatRooms.setAdapter(mAdapter);
-                                    chatRooms.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                ArrayList<String> uids = new ArrayList<>();
+                                uids = (ArrayList<String>) document.get("uids");
+                                for (String uid : uids) {
+                                    if(!uid.equals(mAuth.getUid()))
+                                        uid2 = uid;
+                                }
+                                db.collection("users").document(uid2)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    User user = task.getResult().toObject(User.class);
+                                                    ChatRoom chatRoom = new ChatRoom(user.getUID(), user.getName());
+                                                    rv_list.add(chatRoom);
+                                                }
+                                            }
+                                        });
                             }
+                            ChatRoomsAdapter mAdapter = new ChatRoomsAdapter(rv_list,ChatFragment.this);
+                            chatRooms.setAdapter(mAdapter);
+                            chatRooms.setLayoutManager(new LinearLayoutManager(getActivity()));
                             pbLoading.setVisibility(ProgressBar.GONE);
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
@@ -86,7 +111,7 @@ public class ChatFragment extends Fragment {
         return view;
     }
 
-    private void getChatRooms() {
+    /*private void getChatRooms() {
         chatRoomRepository.getRooms(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot snapshots, FirebaseFirestoreException e) {
@@ -104,15 +129,13 @@ public class ChatFragment extends Fragment {
                 chatRooms.setAdapter(adapter);
             }
         });
-    }
+    }*/
 
-    ChatRoomsAdapter.OnChatRoomClickListener listener = new ChatRoomsAdapter.OnChatRoomClickListener() {
-        @Override
-        public void onClick(ChatRoom chatRoom) {
-            Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
-            intent.putExtra(ChatRoomActivity.CHAT_ROOM_ID, chatRoom.getName());
-            intent.putExtra(ChatRoomActivity.USERNAME, chatRoom.getName());
-            startActivity(intent);
-        }
-    };
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
+        intent.putExtra(ChatRoomActivity.CHAT_ROOM_ID, rv_list.get(clickedItemIndex).getName());
+        intent.putExtra(ChatRoomActivity.USERNAME, rv_list.get(clickedItemIndex).getName());
+        startActivity(intent);
+    }
 }

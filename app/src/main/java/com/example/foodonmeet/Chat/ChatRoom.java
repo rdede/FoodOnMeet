@@ -1,38 +1,26 @@
 package com.example.foodonmeet.Chat;
 
+import java.util.ArrayList;
+
 public class ChatRoom {
 
-    private String uid1;
-    private String uid2;
+    private String uid;
     private String name;
 
-    public ChatRoom(String uid1, String uid2, String name) {
-        this.uid1 = uid1;
-        this.uid2 = uid2;
+    public ChatRoom(String uid, String name) {
+        this.uid = uid;
         this.name = name;
     }
 
     public ChatRoom() {
     }
 
-    public ChatRoom(String uid1) {
-        this.uid1 = uid1;
+    public String getUid() {
+        return uid;
     }
 
-    public String getUid1() {
-        return uid1;
-    }
-
-    public String getUid2() {
-        return uid2;
-    }
-
-    public void setUid1(String uid1) {
-        this.uid1 = uid1;
-    }
-
-    public void setUid2(String uid2) {
-        this.uid2 = uid2;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {

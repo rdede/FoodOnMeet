@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,9 +53,11 @@ public class ChatRoomRepository {
 
     public void createRoom(String name, String uid1, String uid2, final OnSuccessListener<DocumentReference> successCallback, final OnFailureListener failureCallback) {
         Map<String, Object> room = new HashMap<>();
+        ArrayList<String> listUids = new ArrayList<>();
+        listUids.add(uid1);
+        listUids.add(uid2);
         room.put("name", name);
-        room.put("uid1", uid1);
-        room.put("uid2", uid2);
+        room.put("uids", listUids);
 
         db.collection("rooms")
                 .add(room)

@@ -17,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.foodonmeet.Chat.ChatFragment;
 import com.example.foodonmeet.Notifications.BookingsFragment;
 
 import java.util.ArrayList;
