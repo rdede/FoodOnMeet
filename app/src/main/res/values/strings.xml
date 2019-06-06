@@ -10,6 +10,7 @@
     <string name="no_account">No account yet ? Sign up</string>
 
     <string name="sign_out">Sign Out</string>
+    <string name="distance_location">Distance from your location</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
 
@@ -41,6 +42,9 @@
     <string name="send_message">Send a message</string>
     <string name="see_profile">See profile</string>
     <string name="booking">Start booking</string>
+    <string name="view_location">Get the location</string>
+    <string name="location_unavailable">Exact location only available after booking</string>
+    <string name="location">Location</string>
 
     <string name="no_desc">No description available for this event</string>
 
@@ -58,4 +62,6 @@
     <string name="save">Save</string>
     <string name="error_empty_message">Please enter a message</string>
     <string name="error_message_failed">Faileed to send your message</string>
+
+    <string name="distance_preferences">distance_pref</string>
 </resources>

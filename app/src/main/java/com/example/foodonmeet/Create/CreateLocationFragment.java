@@ -53,7 +53,6 @@ public class CreateLocationFragment extends Fragment {
             @Override
             public void onPlaceSelected(Place place) {
                 latLng = place.getLatLng();
-                Log.d("coucou", "Place: " + place.getName() + ", " + place.getId());
             }
 
             @Override

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
@@ -35,7 +36,14 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        toolbarTitle.setText("Setttings");
+        toolbarTitle.setText("Settings");
+
+        toolbar.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     public void signOut(View view) {

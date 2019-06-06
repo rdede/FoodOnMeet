@@ -8,9 +8,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 
-public class Event {
+public class Event{
     private String title;
     private User user;
     private Date date;

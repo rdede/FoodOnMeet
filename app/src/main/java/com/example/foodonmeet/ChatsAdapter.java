@@ -17,8 +17,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.foodonmeet.Notifications.NotificationsFragment;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.foodonmeet.Notifications.BookingsFragment;
 
 import java.util.ArrayList;
 
@@ -89,7 +88,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
 
         //final Fragment fragment1 = new HomeFragment();
         final Fragment fragment2 = new ChatFragment();
-        final Fragment fragment3 = new NotificationsFragment();
+        final Fragment fragment3 = new BookingsFragment();
         final FragmentManager fm = getSupportFragmentManager();
         //Fragment active = fragment1;
 

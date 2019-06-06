@@ -69,7 +69,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public void onBindViewHolder(@NonNull final EventsAdapter.ViewHolder viewHolder, final int i) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("profilePic")
                 .child(mList.get(i).getUser().getUID() + "_small");
-        final long SIZE = 300 * 300;
+        final long SIZE = 600 * 600;
         storageRef.getBytes(SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {

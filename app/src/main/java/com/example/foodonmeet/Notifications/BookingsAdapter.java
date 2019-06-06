@@ -3,19 +3,16 @@ package com.example.foodonmeet.Notifications;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.foodonmeet.R;
-import com.example.foodonmeet.home.EventsAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -24,13 +21,13 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
+public class BookingsAdapter extends RecyclerView.Adapter<BookingsAdapter.ViewHolder> {
 
     private ArrayList<Booking> mList;
     final private OnListItemClickListener mOnListItemClickListener;
     private Context context;
 
-    public NotificationsAdapter(ArrayList<Booking> mList, OnListItemClickListener mOnListItemClickListener, Context context) {
+    public BookingsAdapter(ArrayList<Booking> mList, OnListItemClickListener mOnListItemClickListener, Context context) {
         this.mList = mList;
         this.mOnListItemClickListener = mOnListItemClickListener;
         this.context = context;
@@ -41,7 +38,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view = inflater.inflate(R.layout.item_booking, viewGroup, false);
-        return new NotificationsAdapter.ViewHolder(view);
+        return new BookingsAdapter.ViewHolder(view);
     }
 
     @Override

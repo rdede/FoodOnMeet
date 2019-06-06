@@ -215,23 +215,66 @@
                 android:layout_below="@+id/btnProfile"
                 android:background="@color/grey_view" />
 
-            <!--<View
-                android:id="@+id/viewGuests"
+            <View
+                android:id="@+id/viewLocation"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/grey_view"
-                android:layout_below="@+id/viewButtonBottom"/>
+                android:layout_below="@+id/viewButtonBottom"
+                android:background="@color/grey_background" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/viewButtonBottom"
-                android:textSize="18sp"
-                android:textColor="#000000"
-                android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
-                android:textStyle="bold"
-                android:text="@string/guests"/>-->
+                android:layout_marginTop="20dp"
+                android:text="@string/location"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/viewLocationTop"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/viewLocation"
+                android:background="@color/grey_view" />
+
+            <Button
+                android:id="@+id/btnLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewLocationTop"
+                android:background="@android:color/transparent"
+                android:text="@string/view_location"
+                android:visibility="gone"
+                android:textColor="@color/colorPrimary"
+                android:onClick="goToMaps" />
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:layout_margin="20dp"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                android:layout_below="@+id/viewLocation"
+                android:text="@string/location_unavailable"/>
+
+            <View
+                android:id="@+id/viewBottomBtnLocation"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/btnLocation"
+                android:background="@color/grey_view" />
+
+            <View
+                android:id="@+id/viewBottomTvLocation"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/tvLocation"
+                android:background="@color/grey_view" />
 
         </RelativeLayout>
 

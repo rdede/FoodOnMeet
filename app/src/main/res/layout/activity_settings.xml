@@ -44,8 +44,37 @@
             android:textSize="18sp"
             android:paddingLeft="30dp"
             android:textColor="@android:color/holo_red_light"
-            android:background="@drawable/shape_button_settings"
+            android:background="@color/grey_300"
             android:onClick="signOut"/>
+
+        <LinearLayout
+            android:layout_below="@+id/btnSignout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvDistanceLocation"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/distance_location"
+            android:textSize="18sp"
+            android:textColor="@color/grey_500"
+            android:background="@color/grey_300"/>
+
+        <SeekBar
+            android:id="@+id/sbDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:min="0"
+            android:background="@color/grey_300"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

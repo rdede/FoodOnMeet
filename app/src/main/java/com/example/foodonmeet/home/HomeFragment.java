@@ -3,6 +3,7 @@ package com.example.foodonmeet.home;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -23,12 +24,15 @@ import com.example.foodonmeet.R;
 import com.example.foodonmeet.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +50,7 @@ public class HomeFragment extends Fragment implements EventsAdapter.OnListItemCl
     private ProgressBar pbLoading;
 
     FirebaseFirestore db;
+    FirebaseAuth mAuth;
 
 
     public HomeFragment() {
@@ -60,6 +65,7 @@ public class HomeFragment extends Fragment implements EventsAdapter.OnListItemCl
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
 
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         pbLoading = view.findViewById(R.id.pbLoading);
 
@@ -72,6 +78,9 @@ public class HomeFragment extends Fragment implements EventsAdapter.OnListItemCl
         Location myLocation = getLastKnownLocation();
         Log.d("coucou", String.valueOf(myLocation.getLatitude()));
 
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.distance_preferences), getActivity().MODE_PRIVATE);
+        final int distanceValue = prefs.getInt("dist", 30);
+
 
         pbLoading.setVisibility(ProgressBar.VISIBLE);
 
@@ -83,13 +92,22 @@ public class HomeFragment extends Fragment implements EventsAdapter.OnListItemCl
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Event event = document.toObject(Event.class);
-                                if (event.getDate().after(Calendar.getInstance().getTime())) {
+                                if (event.getDate().after(Calendar.getInstance().getTime())
+                                        && !event.getListGuests().contains(mAuth.getUid())
+                                        && !event.getUser().getUID().equals(mAuth.getUid())
+                                        && getDistance(event.getLatitude(), event.getLongitude()) < distanceValue) {
                                     rv_list.add(event);
-                                    EventsAdapter mAdapter = new EventsAdapter(rv_list, HomeFragment.this, getContext());
-                                    recyclerView.setAdapter(mAdapter);
-                                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                                 }
                             }
+                            Collections.sort(rv_list, new Comparator<Event>(){
+                                @Override
+                                public int compare(Event o1, Event o2) {
+                                    return Float.compare(getDistance(o1.getLatitude(), o1.getLongitude()), getDistance(o2.getLatitude(), o2.getLongitude()));
+                                }
+                            });
+                            EventsAdapter mAdapter = new EventsAdapter(rv_list, HomeFragment.this, getContext());
+                            recyclerView.setAdapter(mAdapter);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             pbLoading.setVisibility(ProgressBar.GONE);
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
@@ -104,7 +122,21 @@ public class HomeFragment extends Fragment implements EventsAdapter.OnListItemCl
         Intent i = new Intent(getActivity(), DetailsActivity.class);
         i.putExtra("postId", rv_list.get(clickedItemIndex).getPostId());
         i.putExtra("postName", rv_list.get(clickedItemIndex).getTitle());
+        i.putExtra("origin", "home");
         startActivity(i);
+    }
+
+    public float getDistance(double latitude, double longitude) {
+        Location eventLocation = new Location("point A");
+
+        eventLocation.setLatitude(latitude);
+        eventLocation.setLongitude(longitude);
+
+        Location myLocation = getLastKnownLocation();
+
+        float distanceFloat = myLocation.distanceTo(eventLocation)/1000;
+
+        return distanceFloat;
     }
 
     private Location getLastKnownLocation() {

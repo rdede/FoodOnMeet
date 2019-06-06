@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.foodonmeet.Notifications.Booking;
 import com.example.foodonmeet.home.Event;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -43,6 +46,9 @@ public class DetailsActivity extends AppCompatActivity {
     private String postName;
     private String userName;
     private int flag;
+    private String origin;
+    private Double latitude;
+    private Double longitude;
 
     private TextView tvDate;
     private CircleImageView imgProfile;
@@ -52,6 +58,11 @@ public class DetailsActivity extends AppCompatActivity {
     private CircleImageView imgHostPicture;
     private TextView tvHostNameAge;
     private ImageView imgHostFlag;
+    private TextView tvLocation;
+    private Button btnLocation;
+    private Button btnBooking;
+    private View viewTv;
+    private View viewBtn;
 
     private ProgressBar pbLoading;
     private RelativeLayout rlDetails;
@@ -72,6 +83,11 @@ public class DetailsActivity extends AppCompatActivity {
         imgHostPicture = findViewById(R.id.eventHostPicture);
         tvHostNameAge = findViewById(R.id.eventHostNameAge);
         imgHostFlag = findViewById(R.id.eventHostFlag);
+        tvLocation = findViewById(R.id.tvLocation);
+        btnLocation = findViewById(R.id.btnLocation);
+        btnBooking = findViewById(R.id.btnBooking);
+        viewBtn = findViewById(R.id.viewBottomBtnLocation);
+        viewTv = findViewById(R.id.viewBottomTvLocation);
 
         pbLoading = findViewById(R.id.pbLoading);
         rlDetails = findViewById(R.id.rlDetails);
@@ -79,6 +95,22 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         postId = intent.getStringExtra("postId");
         postName = intent.getStringExtra("postName");
+        origin = intent.getStringExtra("origin");
+
+        if(origin.equals("myEvents")) {
+            tvLocation.setVisibility(TextView.GONE);
+            btnLocation.setVisibility(Button.VISIBLE);
+            btnBooking.setVisibility(Button.GONE);
+            viewTv.setVisibility(View.GONE);
+            viewBtn.setVisibility(View.VISIBLE);
+        } else {
+            tvLocation.setVisibility(TextView.VISIBLE);
+            btnLocation.setVisibility(Button.GONE);
+            btnBooking.setVisibility(Button.VISIBLE);
+            viewTv.setVisibility(View.VISIBLE);
+            viewBtn.setVisibility(View.GONE);
+        }
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -131,6 +163,8 @@ public class DetailsActivity extends AppCompatActivity {
                                 postUid = event.getUser().getUID();
                                 userName = event.getUser().getName();
                                 flag = event.getUser().accessFlag();
+                                latitude = event.getLatitude();
+                                longitude = event.getLongitude();
                                 pbLoading.setVisibility(ProgressBar.GONE);
                                 rlDetails.setVisibility(RelativeLayout.VISIBLE);
                             } else {
@@ -175,5 +209,15 @@ public class DetailsActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public void goToMaps(View view) {
+        String uriString = "geo:" + latitude + "," + longitude + "?q=" + latitude + "," + longitude + "(" + postName + ")";
+        Uri gmmIntentUri = Uri.parse(uriString);
+
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        startActivity(mapIntent);
     }
 }

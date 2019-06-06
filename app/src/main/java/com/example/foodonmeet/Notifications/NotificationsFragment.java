@@ -2,134 +2,45 @@ package com.example.foodonmeet.Notifications;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.example.foodonmeet.R;
-import com.example.foodonmeet.home.Event;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
+public class NotificationsFragment extends Fragment {
 
+    private SectionsPageAdapter mSectionsPageAdapter;
 
-public class NotificationsFragment extends Fragment implements NotificationsAdapter.OnListItemClickListener {
+    private ViewPager mViewPager;
 
-    private static final String TAG = NotificationsFragment.class.getName();
+    public NotificationsFragment() { }
 
-    private ArrayList<Booking> rv_list;
-    private RecyclerView recyclerView;
-    private NotificationsAdapter mAdapter;
-
-    private ProgressBar pbLoading;
-
-    private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
-
-    public NotificationsFragment() {
-
-    }
-
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.rv);
+        mSectionsPageAdapter = new SectionsPageAdapter(getChildFragmentManager());
 
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) view.findViewById(R.id.container);
+        setupViewPager(mViewPager);
 
-        //pbLoading = view.findViewById(R.id.pbLoading);
-
-        rv_list = new ArrayList<Booking>();
-
-        //pbLoading.setVisibility(ProgressBar.VISIBLE);
-
-        db.collection("bookings").whereEqualTo("receiverUid", mAuth.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Booking booking = document.toObject(Booking.class);
-                                rv_list.add(booking);
-                                mAdapter = new NotificationsAdapter(rv_list, NotificationsFragment.this,getContext());
-                                recyclerView.setAdapter(mAdapter);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                            }
-                            //pbLoading.setVisibility(ProgressBar.GONE);
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
         return view;
     }
 
-    @Override
-    public void onAcceptClick(int clickerItemIndex) {
-        final DocumentReference ref = db.collection("posts").document(rv_list.get(clickerItemIndex).getPostId());
-
-        ref.update("guests", FieldValue.arrayUnion(rv_list.get(clickerItemIndex).getRequesterUid()));
-        ref.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()) {
-                            Event event = task.getResult().toObject(Event.class);
-                            int nbGuests = event.getNbGuests()+1;
-                            Log.d("coucou", Integer.toString(nbGuests));
-                            ref.update("nbGuests", nbGuests);
-                        }
-                    }
-                });
-        db.collection("bookings").whereEqualTo("bookingId", rv_list.get(clickerItemIndex).getBookingId())
-                .limit(1).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for (DocumentSnapshot document : task.getResult()) {
-                                db.collection("bookings").document(document.getId()).delete();
-                            }
-                        }
-                    }
-                });
-        rv_list.remove(clickerItemIndex);
-        mAdapter.notifyItemRemoved(clickerItemIndex);
-    }
-
-    @Override
-    public void onDeclineClick(int clickerItemIndex) {
-        db.collection("bookings").whereEqualTo("bookingId", rv_list.get(clickerItemIndex).getBookingId())
-                .limit(1).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for (DocumentSnapshot document : task.getResult()) {
-                                db.collection("bookings").document(document.getId()).delete();
-                            }
-                        }
-                    }
-                });
-        rv_list.remove(clickerItemIndex);
-        mAdapter.notifyItemRemoved(clickerItemIndex);
+    private void setupViewPager(ViewPager viewPager) {
+        SectionsPageAdapter adapter = new SectionsPageAdapter(getChildFragmentManager());
+        adapter.addFragment(new BookingsFragment(), "Bookings");
+        adapter.addFragment(new MyEventsFragments(), "MyEvents");
+        viewPager.setAdapter(adapter);
     }
 }

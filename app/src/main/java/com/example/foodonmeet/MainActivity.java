@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.foodonmeet.Create.CreateActivity;
+import com.example.foodonmeet.Notifications.BookingsFragment;
 import com.example.foodonmeet.Notifications.NotificationsFragment;
 import com.example.foodonmeet.home.HomeFragment;
 import com.example.foodonmeet.home.EventsAdapter;

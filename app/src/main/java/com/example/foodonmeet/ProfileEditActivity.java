@@ -3,6 +3,7 @@ package com.example.foodonmeet;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,6 +36,11 @@ public class ProfileEditActivity extends AppCompatActivity {
     private CircleImageView imgProfile;
     private EditText etBio;
 
+    private int distanceValue;
+
+    private TextView tvDistance;
+    private SeekBar sbDistance;
+
     private final Integer PICK_IMAGE_REQUEST = 1;
 
     @Override
@@ -47,11 +54,24 @@ public class ProfileEditActivity extends AppCompatActivity {
         imgProfile = findViewById(R.id.profilePicture);
         etBio = findViewById(R.id.etBio);
 
+
+        tvDistance = findViewById(R.id.tvDistanceDisplay);
+        sbDistance = findViewById(R.id.sbDistance);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final Context context = this;
+
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Edit Profile");
+
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.distance_preferences), MODE_PRIVATE);
+        int value = prefs.getInt("dist", 30);
+
+        tvDistance.setText(value + "km");
+        sbDistance.setProgress(value);
+
 
         toolbar.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +89,30 @@ public class ProfileEditActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.distance_preferences), MODE_PRIVATE).edit();
+                                editor.putInt("dist",distanceValue);
+                                editor.apply();
                                 finish();
                             }
                         });
+            }
+        });
+
+        sbDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tvDistance.setText(progress + "km");
+                distanceValue = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
