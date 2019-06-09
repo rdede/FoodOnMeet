@@ -69,7 +69,7 @@ public class ChatFragment extends Fragment implements ChatRoomsAdapter.OnListIte
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (final QueryDocumentSnapshot document : task.getResult()) {
                                 ArrayList<String> uids = new ArrayList<>();
                                 uids = (ArrayList<String>) document.get("uids");
                                 for (String uid : uids) {
@@ -83,7 +83,7 @@ public class ChatFragment extends Fragment implements ChatRoomsAdapter.OnListIte
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     User user = task.getResult().toObject(User.class);
-                                                    ChatRoom chatRoom = new ChatRoom(user.getUID(), user.getName());
+                                                    ChatRoom chatRoom = new ChatRoom(user.getUID(), user.getName(), document.getId());
                                                     rv_list.add(chatRoom);
                                                 }
                                             }
@@ -125,7 +125,7 @@ public class ChatFragment extends Fragment implements ChatRoomsAdapter.OnListIte
     @Override
     public void onListItemClick(int clickedItemIndex) {
         Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
-        intent.putExtra(ChatRoomActivity.CHAT_ROOM_ID, rv_list.get(clickedItemIndex).getName());
+        intent.putExtra(ChatRoomActivity.CHAT_ROOM_ID, rv_list.get(clickedItemIndex).getRoomId());
         intent.putExtra(ChatRoomActivity.USERNAME, rv_list.get(clickedItemIndex).getName());
         startActivity(intent);
     }

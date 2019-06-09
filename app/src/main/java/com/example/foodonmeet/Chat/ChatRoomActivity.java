@@ -63,6 +63,8 @@ public class ChatRoomActivity extends AppCompatActivity {
             roomName = extras.getString(USERNAME, "");
         }
 
+        Log.d("coucou", roomId);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);

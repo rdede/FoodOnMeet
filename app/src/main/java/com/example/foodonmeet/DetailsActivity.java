@@ -44,8 +44,6 @@ public class DetailsActivity extends AppCompatActivity {
     private String postId;
     private String postUid;
     private String postName;
-    private String userName;
-    private int flag;
     private String origin;
     private Double latitude;
     private Double longitude;
@@ -161,8 +159,6 @@ public class DetailsActivity extends AppCompatActivity {
                                 tvTime.setText(event.getTimeString());
                                 imgHostFlag.setImageDrawable(getResources().getDrawable(event.getUser().accessFlag()));
                                 postUid = event.getUser().getUID();
-                                userName = event.getUser().getName();
-                                flag = event.getUser().accessFlag();
                                 latitude = event.getLatitude();
                                 longitude = event.getLongitude();
                                 pbLoading.setVisibility(ProgressBar.GONE);
@@ -193,18 +189,28 @@ public class DetailsActivity extends AppCompatActivity {
                             if (!task.getResult().isEmpty()) {
                                 Toast.makeText(DetailsActivity.this, "You have already sent a booking request for this event", Toast.LENGTH_SHORT).show();
                             } else {
-                                Booking booking = new Booking(userName, flag, mAuth.getUid(), postName, postId, postUid, null);
-                                db.collection("bookings")
-                                        .add(booking)
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                db.collection("users").document(mAuth.getUid())
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                db.collection("booking").document(documentReference.getId())
-                                                        .update("bookingId", documentReference.getId());
-                                                Toast.makeText(DetailsActivity.this, "A booking request has been send", Toast.LENGTH_SHORT).show();
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if(task.isSuccessful()) {
+                                                    User user = task.getResult().toObject(User.class);
+                                                    Booking booking = new Booking(user.getName(), user.accessFlag(), mAuth.getUid(), postName, postId, postUid, null);
+                                                    db.collection("bookings")
+                                                            .add(booking)
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentReference documentReference) {
+                                                                    db.collection("booking").document(documentReference.getId())
+                                                                            .update("bookingId", documentReference.getId());
+                                                                    Toast.makeText(DetailsActivity.this, "A booking request has been send", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                    finish();
+                                                }
                                             }
                                         });
-                                finish();
                             }
                         }
                     }

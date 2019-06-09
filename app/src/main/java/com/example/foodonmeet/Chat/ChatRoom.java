@@ -33,10 +33,12 @@ public class ChatRoom {
 
     private String uid;
     private String name;
+    private String roomId;
 
-    public ChatRoom(String uid, String name) {
+    public ChatRoom(String uid, String name, String roomId) {
         this.uid = uid;
         this.name = name;
+        this.roomId = roomId;
     }
 
     public ChatRoom() {
@@ -58,4 +60,11 @@ public class ChatRoom {
         this.name = name;
     }
 
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
 }
